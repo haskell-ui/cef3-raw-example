@@ -1,4 +1,4 @@
-{ mkDerivation, base, cef3-raw, stdenv, libcef3
+{ mkDerivation, base, cef3-raw, stdenv
 }:
 mkDerivation {
   pname = "cef3-raw-example";
@@ -8,7 +8,7 @@ mkDerivation {
   isExecutable = true;
   executableHaskellDepends = [ base cef3-raw ];
   postInstall = ''
-    ln -s ${libcef3}/bin/locales $out/bin/
+    ln -s ${cef3-raw.libcef3}/bin/locales $out/bin/
   '';
   description = "CEF3 bindings usage example";
   license = stdenv.lib.licenses.bsd3;
