@@ -1,0 +1,16 @@
+
+version: "branch-{branch}-build-nr-{build}"
+skip_tags: true
+environment:
+  global:
+    STACK_ROOT: C:\sr
+
+build: off
+
+install:
+  - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
+  - 7z x stack.zip stack.exe
+  - dir
+
+build_script:
+  - stack setup --skip-msys --no-terminal > NUL
