@@ -11,7 +11,8 @@ install:
   - git submodule update --init --recursive
   - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
   - 7z x stack.zip stack.exe
-  - move stack.exe %APPDATA%\local\bin\
+  - echo %PATH%
+  - move stack.exe %APPDATA%\local\bin
   - .\cef3-raw\scripts\setup.bat
 
 build_script:
