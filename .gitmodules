@@ -1,3 +1,4 @@
 [submodule "cef3-raw"]
 	path = cef3-raw
 	url = https://github.com/haskell-ui/cef3-raw
+        branch = windows
