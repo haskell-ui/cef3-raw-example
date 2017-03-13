@@ -10,7 +10,11 @@ build: off
 install:
   - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
   - 7z x stack.zip stack.exe
-  - dir
+  - .\cef3-raw\scripts\setup.bat
 
 build_script:
+  - cd cef3-raw
+  - .\scripts\build.bat
+  - cd ..
   - stack setup --skip-msys --no-terminal > NUL
+  - stack build
