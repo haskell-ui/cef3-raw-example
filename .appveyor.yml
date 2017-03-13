@@ -7,7 +7,7 @@ environment:
 
 skip_commits:
   files:
-    - *.md
+    - '**\*.md'
 
 build: off
 
