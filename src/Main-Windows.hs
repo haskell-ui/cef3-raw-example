@@ -4,9 +4,9 @@ import Control.Monad (unless, void)
 import Foreign.C
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
-import Foreign.Storable
 import System.Environment
 
+import Graphics.Win32
 import System.Win32.DLL
 import Bindings.CEF3
 
@@ -26,7 +26,21 @@ main = do
         void $ c'cef_initialize mainArgs settings app nullPtr
 
         putStrLn "new windowInfo"
-        windowInfo <- new $ C'cef_window_info_t nullPtr 0 0 nullPtr
+        -- windowInfo <- new $ C'cef_window_info_t nullPtr 0 0 nullPtr
+        winName <- mkCefString "Test window"
+        windowInfo <- new $ C'cef_window_info_t
+            wS_EX_CLIENTEDGE
+            winName
+            wS_OVERLAPPEDWINDOW
+            (fromIntegral wS_USEDEFAULT)
+            (fromIntegral wS_USEDEFAULT)
+            400 300
+            nullPtr -- Parent_Window
+            nullPtr -- Menu
+            False   -- window_rendering_disabled
+            False   -- transparent_painting
+            nullPtr -- Window?
+
         cefUrl <- mkCefStringPtr "http://www.google.com"
 
         browserSettings <- mkBrowserSettings

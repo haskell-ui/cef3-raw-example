@@ -4,7 +4,6 @@ import Control.Monad (unless, void)
 import Foreign.C
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
-import Foreign.Storable
 import System.Environment
 
 import Bindings.CEF3

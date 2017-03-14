@@ -1,11 +1,10 @@
 module Common where
 
-import Control.Monad (unless, void)
+import Control.Monad (void)
 import Foreign.C
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
 import Foreign.Storable
-import System.Environment
 import Bindings.CEF3
 
 mkCefString :: String -> IO C'cef_string_utf16_t
