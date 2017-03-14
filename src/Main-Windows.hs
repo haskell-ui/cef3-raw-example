@@ -10,6 +10,8 @@ import System.Environment
 import System.Win32.DLL
 import Bindings.CEF3
 
+import Common
+
 main :: IO ()
 main = do
     hinst <- getModuleHandle Nothing
