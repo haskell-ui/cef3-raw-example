@@ -25,7 +25,7 @@ build_script:
   - .\scripts\build.bat
   - cd ..
   - stack setup --skip-msys --no-terminal > NUL
-  - stack build
+  - stack build --extra-lib-dirs="%CEF3_PATH%\Release"
 
 cache:
   - C:\sr -> .appveyor.yml
