@@ -32,6 +32,7 @@ Executable cef3-raw-example
     build-depends:     Win32
     -- ghc-options:       -DBINDINGS_STDCALLCONV
     ghc-options:
-        -optl-lC:\cef3-dev\Release\libcef.dll
+        -LC:\cef3-dev\Release -lcef
+        -- -optl-lC:\cef3-dev\Release\libcef.dll
         -- -optl-Wl,-rpath,$ORIGIN
 
