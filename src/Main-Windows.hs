@@ -1,10 +1,8 @@
 module Main where
 
 import Control.Monad (unless, void)
-import Foreign.C
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
-import System.Environment
 
 import Graphics.Win32
 import System.Win32.DLL
