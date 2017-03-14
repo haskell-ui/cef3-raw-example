@@ -30,5 +30,6 @@ Executable cef3-raw-example
     main-is:           Main-Windows.hs
     extra-libraries:   libcef
     build-depends:     Win32
-    ghc-options:       -DBINDINGS_STDCALLCONV
+    -- ghc-options:       -DBINDINGS_STDCALLCONV
+    ghc-options:       -optlC:\cef3-dev\Release\libcef3.dll
 
