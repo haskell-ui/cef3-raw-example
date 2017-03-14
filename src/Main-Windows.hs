@@ -32,8 +32,8 @@ main = do
             wS_EX_CLIENTEDGE
             winName
             wS_OVERLAPPEDWINDOW
-            (fromIntegral wS_USEDEFAULT)
-            (fromIntegral wS_USEDEFAULT)
+            (fromIntegral cW_USEDEFAULT)
+            (fromIntegral cW_USEDEFAULT)
             400 300
             nullPtr -- Parent_Window
             nullPtr -- Menu
