@@ -11,9 +11,10 @@ skip_commits:
 
 build: off
 
+#- curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
 install:
   - git submodule update --init --recursive
-  - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
+  - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64
   - 7z x stack.zip stack.exe
   - set PATH=%PATH%;C:\Stack
   - mkdir C:\Stack
