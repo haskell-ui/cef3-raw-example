@@ -14,7 +14,7 @@ build: off
 #- curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
 install:
   - git submodule update --init --recursive
-  - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64
+  - curl -s -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64
   - 7z x stack.zip stack.exe > NUL
   - set PATH=%PATH%;C:\Stack
   - mkdir C:\Stack
@@ -41,6 +41,3 @@ artifacts:
     name: Full App
   - path: result\cef3-raw-example.exe
     name: Exe Only
-
-cache:
-  - C:\sr -> .appveyor.yml

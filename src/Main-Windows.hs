@@ -1,8 +1,10 @@
 module Main where
 
+import Control.Exception (catch)
 import Control.Monad (unless, void, forever)
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
+import System.Exit
 
 import Graphics.Win32
 import System.Win32.DLL
@@ -32,7 +34,7 @@ main = do
         c'cef_shutdown
 
 setupWindow :: HINSTANCE -> Int -> Int -> IO ()
-setupWindow mainInstance width height wndProc = do
+setupWindow mainInstance width height = do
   let winClass = mkClassName "Hello"
   icon    <- loadIcon   Nothing iDI_APPLICATION
   cursor  <- loadCursor Nothing iDC_ARROW
@@ -46,7 +48,7 @@ setupWindow mainInstance width height wndProc = do
       , Nothing
       , winClass
       )
-  lpps <- mallocBytes siceofPAINTSTRUCT
+  lpps <- mallocBytes sizeofPAINTSTRUCT
   hwnd <- createWindow
               winClass
               "Test window"
