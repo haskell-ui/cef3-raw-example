@@ -1,10 +1,8 @@
 module Main where
 
-import Control.Exception (catch)
 import Control.Monad (unless, void, forever)
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
-import System.Exit
 
 import Graphics.Win32
 import System.Win32.DLL
@@ -61,12 +59,6 @@ setupWindow mainInstance width height = do
               (wndProc lpps)
   showWindow hwnd sW_SHOWNORMAL
   updateWindow hwnd
-
-messagePump :: HWND -> IO ()
-messagePump hwnd = allocaMessage $ \ msg -> forever $ do
-    getMessage msg (Just hwnd) `catch` \ _ -> exitWith ExitSuccess
-    translateMessage msg
-    dispatchMessage msg
 
 wndProc :: LPPAINTSTRUCT
     -> HWND -> WindowMessage -> WPARAM -> LPARAM -> IO LRESULT

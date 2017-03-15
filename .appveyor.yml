@@ -41,3 +41,6 @@ artifacts:
     name: Full App
   - path: result\cef3-raw-example.exe
     name: Exe Only
+
+cache:
+  - C:\sr -> .appveyor.yml
