@@ -28,11 +28,5 @@ Executable cef3-raw-example
     main-is:           Main-Linux.hs
   if os(windows)
     main-is:           Main-Windows.hs
-    -- extra-libraries:   libcef
     build-depends:     Win32
-    -- ghc-options:       -DBINDINGS_STDCALLCONV
-    ghc-options:
-        -LC:\cef3-dev\Release -lcef
-        -- -optl-lC:\cef3-dev\Release\libcef.dll
-        -- -optl-Wl,-rpath,$ORIGIN
 

@@ -15,7 +15,7 @@ build: off
 install:
   - git submodule update --init --recursive
   - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64
-  - 7z x stack.zip stack.exe
+  - 7z x stack.zip stack.exe > NUL
   - set PATH=%PATH%;C:\Stack
   - mkdir C:\Stack
   - move stack.exe C:\Stack\
@@ -26,7 +26,19 @@ build_script:
   - .\scripts\build.bat
   - cd ..
   - stack setup --skip-msys --no-terminal > NUL
-  - stack build --extra-lib-dirs="C:\cef3-dev\Release"
+  - stack install
+
+after_build:
+  - mkdir result
+  - xcopy /E /Q %CEF3_PATH%\Release\* result\
+  - xcopy /E /Q %CEF3_PATH%\Resources\* result\
+  - xcopy /Q %APPDATA%\local\bin\cef3-raw-example.exe result\
+  - dir result
+  - 7z a cef3-raw-example.7z result
+
+artifacts:
+  - cef3-raw-example.7z
+  - result\cef3-raw-example.exe
 
 cache:
   - C:\sr -> .appveyor.yml
