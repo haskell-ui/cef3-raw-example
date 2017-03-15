@@ -37,8 +37,10 @@ after_build:
   - 7z a cef3-raw-example.7z result
 
 artifacts:
-  - cef3-raw-example.7z
-  - result\cef3-raw-example.exe
+  - path: cef3-raw-example.7z
+    name: Full App
+  - path: result\cef3-raw-example.exe
+    name: Exe Only
 
 cache:
   - C:\sr -> .appveyor.yml
