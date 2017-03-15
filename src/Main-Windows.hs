@@ -48,7 +48,7 @@ setupWindow mainInstance width height = do
       , Nothing
       , winClass
       )
-  lpps <- mallocBytes sizeofPAINTSTRUCT
+  lpps <- mallocBytes (fromIntegral sizeofPAINTSTRUCT)
   hwnd <- createWindow
               winClass
               "Test window"
