@@ -87,7 +87,7 @@ startBrowserWindow hwnd = do
         winName
         -- wS_OVERLAPPEDWINDOW
         (wS_CHILD .|. wS_CLIPCHILDREN .|. wS_CLIPSIBLINGS .|. wS_TABSTOP
-          .|. wS_VISLIBLE)
+          .|. wS_VISIBLE)
         (fromIntegral left)
         (fromIntegral top)
         width height
