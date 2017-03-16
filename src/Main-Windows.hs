@@ -1,8 +1,9 @@
 module Main where
 
-import Control.Monad (unless, void, forever)
+import Control.Monad (unless, void)
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
+import Data.Bits ((.|.))
 
 import Graphics.Win32
 import System.Win32.DLL
@@ -37,7 +38,7 @@ setupWindow mainInstance width height = do
   icon    <- loadIcon   Nothing iDI_APPLICATION
   cursor  <- loadCursor Nothing iDC_ARROW
   bgBrush <- createSolidBrush (rgb 0 0 255)
-  registerClass
+  void $ registerClass
       ( cS_VREDRAW + cS_HREDRAW
       , mainInstance
       , Just icon
@@ -57,36 +58,39 @@ setupWindow mainInstance width height = do
               Nothing         -- no menu handle
               mainInstance
               (wndProc lpps)
-  showWindow hwnd sW_SHOWNORMAL
+  void $ showWindow hwnd sW_SHOWNORMAL
   updateWindow hwnd
 
 wndProc :: LPPAINTSTRUCT
     -> HWND -> WindowMessage -> WPARAM -> LPARAM -> IO LRESULT
 wndProc lpps hwnd wmsg wParam lParam
- -- | wmsg == wM_PAINT && hwnd /= nullPtr = do
+ | wmsg == wM_PAINT && hwnd /= nullPtr = do
      -- r <- getClientRect hwnd
-     -- hdc <- beginPaint hwnd lpps
-     -- endPaint hwnd lpps
-     -- return 0
+     hdc <- beginPaint hwnd lpps
+     endPaint hwnd lpps
+     return 0
  | otherwise =
      defWindowProc (Just hwnd) wmsg wParam lParam
- | wmsg == wM_PAINT && hwnd /= nullPtr = do
-    -- (left, top, right, bottom) <- getClientRect hwnd
-    startBrowserWindow hwnd
-    return 0
+ | wmsg == wM_CREATE && hwnd /= nullPtr = do
+     startBrowserWindow hwnd
+     return 0
 
+startBrowserWindow :: HWND -> IO ()
 startBrowserWindow hwnd = do
+    (left, top, right, bottom) <- getClientRect hwnd
+    let width  = fromIntegral $ right - left
+    let height = fromIntegral $ bottom - top
     putStrLn "new windowInfo"
-    -- windowInfo <- new $ C'cef_window_info_t nullPtr 0 0 nullPtr
     winName <- mkCefString "Test window"
     windowInfo <- new $ C'cef_window_info_t
         wS_EX_CLIENTEDGE
         winName
         -- wS_OVERLAPPEDWINDOW
-        wS_CHILD
-        (fromIntegral cW_USEDEFAULT)
-        (fromIntegral cW_USEDEFAULT)
-        400 300
+        (wS_CHILD .|. wS_CLIPCHILDREN .|. wS_CLIPSIBLINGS .|. wS_TABSTOP
+          .|. wS_VISLIBLE)
+        (fromIntegral left)
+        (fromIntegral top)
+        width height
         hwnd    -- Parent_Window
         nullPtr -- Menu
         False   -- window_rendering_disabled
