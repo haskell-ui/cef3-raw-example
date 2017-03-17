@@ -40,10 +40,10 @@ startBrowserWindow = do
         winName
         (wS_OVERLAPPEDWINDOW .|. wS_CLIPCHILDREN .|. wS_CLIPSIBLINGS
           .|. wS_VISIBLE)
-        (fromIntegral wS_USEDEFAULT)
-        (fromIntegral wS_USEDEFAULT)
-        (fromIntegral wS_USEDEFAULT)
-        (fromIntegral wS_USEDEFAULT)
+        (fromIntegral cW_USEDEFAULT)
+        (fromIntegral cW_USEDEFAULT)
+        (fromIntegral cW_USEDEFAULT)
+        (fromIntegral cW_USEDEFAULT)
         nullPtr -- Parent_Window
         nullPtr -- Menu
         False   -- window_rendering_disabled
