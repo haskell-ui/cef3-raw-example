@@ -29,4 +29,6 @@ Executable cef3-raw-example
   if os(windows)
     main-is:           Main-Windows.hs
     build-depends:     Win32
+    -- Make it GUI program (no console)
+    ghc-options:       -optl-mwindows
 
