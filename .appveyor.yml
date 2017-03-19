@@ -1,0 +1,46 @@
+
+version: "branch-{branch}-build-nr-{build}"
+skip_tags: true
+environment:
+  global:
+    STACK_ROOT: C:\sr
+
+skip_commits:
+  files:
+    - '**\*.md'
+
+build: off
+
+#- curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
+install:
+  - git submodule update --init --recursive
+  - curl -s -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64
+  - 7z x stack.zip stack.exe > NUL
+  - set PATH=%PATH%;C:\Stack
+  - mkdir C:\Stack
+  - move stack.exe C:\Stack\
+  - .\cef3-raw\scripts\setup.bat
+
+build_script:
+  - cd cef3-raw
+  - .\scripts\build.bat
+  - cd ..
+  - stack setup --skip-msys --no-terminal > NUL
+  - stack install
+
+after_build:
+  - mkdir result
+  - xcopy /E /Q %CEF3_PATH%\Release\* result\
+  - xcopy /E /Q %CEF3_PATH%\Resources\* result\
+  - xcopy /Q %APPDATA%\local\bin\cef3-raw-example.exe result\
+  - dir result
+  - 7z a cef3-raw-example.7z result
+
+artifacts:
+  - path: cef3-raw-example.7z
+    name: Full App
+  - path: result\cef3-raw-example.exe
+    name: Exe Only
+
+cache:
+  - C:\sr -> .appveyor.yml

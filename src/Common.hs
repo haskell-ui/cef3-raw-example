@@ -1,44 +1,11 @@
-module Main where
+module Common where
 
-import Control.Monad (unless, void)
+import Control.Monad (void)
 import Foreign.C
 import Foreign.Ptr
 import Foreign.Marshal hiding (void)
 import Foreign.Storable
-import System.Environment
-
 import Bindings.CEF3
-
-main :: IO ()
-main = do
-    haskArgs <- getArgs
-    argv <- mapM newCString . (:haskArgs) =<< getProgName
-    let argc = fromIntegral . length $ argv
-    pargv <- newArray argv
-    mainArgs <- new $ C'cef_main_args_t argc pargv
-    app <- initialize_app_handler
-    exCode <- c'cef_execute_process mainArgs app nullPtr
-    unless (exCode >= 0) $ do
-
-        settings <- mkCefSettings
-        putStrLn "cef_initialize"
-        void $ c'cef_initialize mainArgs settings app nullPtr
-
-        putStrLn "new windowInfo"
-        windowInfo <- new $ C'cef_window_info_t nullPtr 0 0 nullPtr
-        cefUrl <- mkCefStringPtr "http://www.google.com"
-
-        browserSettings <- mkBrowserSettings
-        client <- initialize_client_handler
-
-        putStrLn "cef_browser_host_create_browser"
-        void $ c'cef_browser_host_create_browser
-            windowInfo client cefUrl browserSettings nullPtr
-
-        putStrLn "cef_run_message_loop"
-        c'cef_run_message_loop
-        putStrLn "cef_shutdown"
-        c'cef_shutdown
 
 mkCefString :: String -> IO C'cef_string_utf16_t
 mkCefString str = mkCefStringPtr str >>= peek
@@ -67,6 +34,9 @@ rtVoid3 s _ _ _ = putStrLn s >> return ()
 
 rtInt1 :: String -> a -> IO CInt
 rtInt1 s _ = putStrLn s >> return 1
+
+rtInt2 :: String -> a -> b -> IO CInt
+rtInt2 s _ _ = putStrLn s >> return 1
 
 initialize_cef_base :: IO C'cef_base_t
 initialize_cef_base = do
@@ -202,7 +172,8 @@ initialize_client_handler = do
     <*> mk'cb_cef_client_get_keyboard_handler
         (rtNull1 "get_keyboard_handler")
     <*> mk'cb_cef_client_get_life_span_handler
-        (rtNull1 "get_life_span_handler")
+        initialize_life_span_handler
+        --(rtNull1 "get_life_span_handler")
     <*> mk'cb_cef_client_get_load_handler
         (rtNull1 "get_load_handler")
     <*> mk'cb_cef_client_get_render_handler
@@ -211,4 +182,26 @@ initialize_client_handler = do
         (rtNull1 "get_request_handler")
     <*> mk'cb_cef_client_on_process_message_received
         (\_ _ _ _ -> putStrLn "on_message_process_received" >> return 0)
+    )
+
+initialize_life_span_handler
+    :: Ptr C'cef_client_t -> IO (Ptr C'cef_life_span_handler_t)
+initialize_life_span_handler _ = do
+  putStrLn "initialize_life_span_handler"
+  newWithSize
+    (C'cef_life_span_handler_t
+    <$> initialize_cef_base
+    <*> mk'cb_cef_life_span_handler_on_before_popup
+        (\_ _ _ _ _ _ _ _ _ _ -> putStrLn "on_before_popup" >> return 0)
+    <*> mk'cb_cef_life_span_handler_on_after_created
+        (rtVoid2 "on_after_created")
+    <*> mk'cb_cef_life_span_handler_run_modal
+        (rtInt2 "run_modal")
+    <*> mk'cb_cef_life_span_handler_do_close
+        (\_ _ -> do
+            putStrLn "do_close"
+            c'cef_quit_message_loop -- close global cef process
+            return 0)               -- allow browser close
+    <*> mk'cb_cef_life_span_handler_on_before_close
+        (rtVoid2 "on_before_close")
     )
