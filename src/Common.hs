@@ -35,6 +35,9 @@ rtVoid3 s _ _ _ = putStrLn s >> return ()
 rtInt1 :: String -> a -> IO CInt
 rtInt1 s _ = putStrLn s >> return 1
 
+rtInt2 :: String -> a -> b -> IO CInt
+rtInt2 s _ _ = putStrLn s >> return 1
+
 initialize_cef_base :: IO C'cef_base_t
 initialize_cef_base = do
   putStrLn "initialize_cef_base"
@@ -169,7 +172,8 @@ initialize_client_handler = do
     <*> mk'cb_cef_client_get_keyboard_handler
         (rtNull1 "get_keyboard_handler")
     <*> mk'cb_cef_client_get_life_span_handler
-        (rtNull1 "get_life_span_handler")
+        initialize_life_span_handler
+        --(rtNull1 "get_life_span_handler")
     <*> mk'cb_cef_client_get_load_handler
         (rtNull1 "get_load_handler")
     <*> mk'cb_cef_client_get_render_handler
@@ -178,4 +182,25 @@ initialize_client_handler = do
         (rtNull1 "get_request_handler")
     <*> mk'cb_cef_client_on_process_message_received
         (\_ _ _ _ -> putStrLn "on_message_process_received" >> return 0)
+    )
+
+initialize_life_span_handler :: Ptr C'cef_client_t -> IO (Ptr C'cef_life_span_handler_t)
+initialize_life_span_handler pClient = do
+  putStrLn "initialize_life_span_handler"
+  newWithSize
+    (C'cef_life_span_handler_t
+    <$> initialize_cef_base
+    <*> mk'cb_cef_life_span_handler_on_before_popup
+        (\_ _ _ _ _ _ _ _ _ _ -> putStrLn "on_before_popup" >> return 0)
+    <*> mk'cb_cef_life_span_handler_on_after_created
+        (rtVoid2 "on_after_created")
+    <*> mk'cb_cef_life_span_handler_run_modal
+        (rtInt2 "run_modal")
+    <*> mk'cb_cef_life_span_handler_do_close
+        (\_ _ -> do
+	    putStrLn "do_close"
+	    c'cef_quit_message_loop -- close global cef process
+	    return 0)               -- allow browser close
+    <*> mk'cb_cef_life_span_handler_on_before_close
+        (rtVoid2 "on_before_close")
     )
