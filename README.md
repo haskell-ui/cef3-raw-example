@@ -15,5 +15,5 @@ result/bin/cef3-raw-example
 [linux-build]: https://travis-ci.org/haskell-ui/cef3-raw-example
 [mac-build-icon]: https://img.shields.io/badge/Mac%20build-TODO-lightgrey.svg
 [mac-build]: https://github.com/haskell-ui/cef3-raw-example
-[windows-build-icon]: https://img.shields.io/appveyor/ci/haskell-ui/cef3-raw-example/master.svg?label=Windows%20build
+[windows-build-icon]: https://img.shields.io/appveyor/ci/MaxOw/cef3-raw-example/master.svg?label=Windows%20build
 [windows-build]: https://ci.appveyor.com/project/MaxOw/cef3-raw-example
