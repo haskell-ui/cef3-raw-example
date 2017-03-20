@@ -22,10 +22,10 @@ install:
   - .\cef3-raw\scripts\setup.bat
 
 build_script:
+  - stack setup --skip-msys --no-terminal > NUL
   - cd cef3-raw
   - .\scripts\configure.bat
   - cd ..
-  - stack setup --skip-msys --no-terminal > NUL
   - stack install
 
 after_build:
